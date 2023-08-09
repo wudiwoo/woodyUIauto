@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="UI Automation Suite">
+    <test name="UI Automation Test">
+        <classes>
+            <class name="steps.demo_steps"/>
+        </classes>
+    </test>
+</suite>

@@ -1,0 +1,3 @@
+chrome:chromedriver-win64/chromedriver.exe
+firefox:/path/to/geckodriver
+edge:/path/to/msedgedriver
