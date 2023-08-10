@@ -6,7 +6,7 @@ import unittest
 class MyTestCase(unittest.TestCase):
 
 
-    def test_valid_login():
+    def test_valid_login(self):
         driver = webdriver.Chrome()
         login_page = LoginPage(driver)
         login_page.open()
