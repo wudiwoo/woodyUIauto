@@ -14,7 +14,7 @@ def run_tests():
 
     # 生成报告
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_file = f"report_{current_time}.html"
+    report_file = os.path.join(target_path, f"report_{current_time}.html")
 
     result = BeautifulReport(suite)
     result.report(filename=report_file, description='Test Report')

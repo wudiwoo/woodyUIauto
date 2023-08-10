@@ -1,27 +1,21 @@
-import requests
-import xml.etree.ElementTree as ET
+import jenkins
 
 def configure_jenkins(report_directory, report_files):
     jenkins_url = 'http://localhost:8080'
     username = 'admin'
     password = 'admin'
-    job_name = 'myUI'
+    job_name = 'myjob'
 
-    # 构建 Jenkins 配置 XML
-    config_xml = f'''
-    <project>
-        <actions/>
-        <description>My Jenkins Job</description>
-        <keepDependencies>false</keepDependencies>
-        <properties/>
-        <scm class="hudson.scm.NullSCM"/>
-        <canRoam>true</canRoam>
-        <disabled>false</disabled>
-        <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-        <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-        <triggers class="vector"/>
-        <concurrentBuild>false</concurrentBuild>
-        <builders/>
+    # 连接到 Jenkins 实例
+    server = jenkins.Jenkins(jenkins_url, username=username, password=password)
+
+    # 获取作业配置
+    job_config = server.get_job_config(job_name)
+
+    # 更新作业配置
+    new_config = job_config.replace(
+        '<publishers>',
+        f'''
         <publishers>
             <hudson.plugins.htmlpublisher.HtmlPublisher>
                 <reportTargets>
@@ -35,20 +29,12 @@ def configure_jenkins(report_directory, report_files):
                     </hudson.plugins.htmlpublisher.HtmlPublisherTarget>
                 </reportTargets>
             </hudson.plugins.htmlpublisher.HtmlPublisher>
-        </publishers>
-        <buildWrappers/>
-    </project>
-    '''
+        ''')
 
-    # 发送 API 请求来更新 Jenkins 作业配置
-    auth = (username, password)
-    headers = {'Content-Type': 'application/xml'}
-    url = f'{jenkins_url}/job/{job_name}/config.xml'
-    response = requests.post(url, auth=auth, headers=headers, data=config_xml)
-    if response.status_code == 200:
-        print('Jenkins job configuration updated successfully.')
-    else:
-        print('Failed to update Jenkins job configuration.')
+    # 更新作业配置
+    server.reconfig_job(job_name, new_config)
+
+    print('Jenkins job configuration updated successfully.')
 
 if __name__ == '__main__':
     report_directory = 'reports'
